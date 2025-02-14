@@ -8,6 +8,7 @@ import { FormsModule } from '@angular/forms';
   templateUrl: './blog.component.html',
   styleUrl: './blog.component.css'
 })
+
 export class BlogComponent {
   noticias: IBlog[] = [
     {
@@ -57,6 +58,4 @@ export class BlogComponent {
       date: new Date()
     };
   }
-
-
 }
