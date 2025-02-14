@@ -57,4 +57,6 @@ export class BlogComponent {
       date: new Date()
     };
   }
+
+
 }
