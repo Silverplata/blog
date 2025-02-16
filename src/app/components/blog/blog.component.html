@@ -24,13 +24,17 @@
     <div class="content">
       <section class="news-list">
         <h2>Últimas Publicaciones</h2>
-        @for (noticia of noticias; track noticia.title) {
-          <div class="noticia-item">
-            <img [src]="noticia.image" alt="Imagen noticia">
-            <h3>{{ noticia.title }}</h3>
-            <p>{{ noticia.description }}</p>
-            <small>{{ noticia.date }}</small>
-          </div>
+        @if (noticias.length > 0) {
+          @for (noticia of noticias; track noticia.title) {
+            <div class="noticia-item">
+              <img [src]="noticia.image" alt="Imagen noticia">
+              <h3>{{ noticia.title }}</h3>
+              <p>{{ noticia.description }}</p>
+              <small>{{ noticia.date }}</small>
+            </div>
+          }
+        } @else {
+          <p class="no-news">No hay noticias disponibles</p>
         }
       </section>
     </div>
