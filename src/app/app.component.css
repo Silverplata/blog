@@ -32,3 +32,16 @@
     margin-top: auto;
   }
   
+  @media screen and (max-width: 700px) {
+    .title {
+      font-size: 1.5rem;
+    }
+  
+    .main-container {
+      padding: 0.5rem;
+    }
+  
+    .footer p {
+      font-size: 0.8rem;
+    }
+  }
