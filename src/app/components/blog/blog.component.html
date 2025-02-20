@@ -9,15 +9,21 @@
   
         <div class="form-group">
           <label>URL Imagen:</label>
-          <input type="url" [(ngModel)]="nuevaNoticia.image" name="image" required>
+          <input type="url" [(ngModel)]="nuevaNoticia.image" name="image" #imageInput="ngModel" pattern="^(https?://).+\.(jpg|jpeg|png|gif|webp)(\?.*)?$" required>
+          <!-- Mensaje de error -->
+          @if (imageInput.invalid && imageInput.touched) {
+            <small class="error-message">
+              URL inválida. Debe comenzar con http/https y terminar en .jpg, .jpeg, .png, .gif o .webp
+            </small>
+          }
         </div>
   
         <div class="form-group">
           <label>Descripción:</label>
-          <textarea [(ngModel)]="nuevaNoticia.description" name="description" required></textarea>
+          <textarea [(ngModel)]="nuevaNoticia.description" name="description" rows="10" required></textarea>
         </div>
   
-        <button type="submit">Publicar</button>
+        <button type="submit" [disabled]="!validarCampos()">Publicar</button>
       </form>
     </aside>
   

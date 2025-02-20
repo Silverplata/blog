@@ -51,10 +51,16 @@ export class BlogComponent implements OnInit {
     }
   }
 
-  private validarCampos(): boolean {
+  public validarCampos(): boolean {
     return !!this.nuevaNoticia.title?.trim() && 
-           !!this.nuevaNoticia.image?.trim() && 
+           this.esImagenValida(this.nuevaNoticia.image) &&  // <-- Nueva validación
            !!this.nuevaNoticia.description?.trim();
+  }
+  
+  private esImagenValida(url: string): boolean {
+    // Valida formato URL y extensión de imagen
+    const pattern = /^(https?:\/\/).+\.(jpg|jpeg|png|gif|webp)(\?.*)?$/i;
+    return !!url?.trim() && pattern.test(url);
   }
 
   private resetFormulario() {
