@@ -11,6 +11,7 @@ import Swal from 'sweetalert2';
 })
 
 export class BlogComponent implements OnInit {
+  // 1. Propiedades del componente
   noticias: IBlog[] = [];
   nuevaNoticia: IBlog = {
     id: 1,
@@ -20,10 +21,12 @@ export class BlogComponent implements OnInit {
     date: new Date()
   };
 
+  // 2. Ciclo de vida OnInit
   ngOnInit(): void {
-    this.inicializarNoticias();
+    this.inicializarNoticias(); // Carga noticias iniciales
   }
 
+  // 3. Método de inicialización
   private inicializarNoticias(): void {
     this.noticias = [
       {
@@ -43,31 +46,34 @@ export class BlogComponent implements OnInit {
     ];
   }
 
+  // 4. Método para agregar noticias
   agregarNoticia() {
     if (this.validarCampos()) {
       // Generar nuevo ID
       const nuevoId = this.noticias.length > 0 
                      ? Math.max(...this.noticias.map(n => n.id)) + 1 
                      : 1;
-      
+      // Añadir nueva noticia
       this.noticias.push({
         ...this.nuevaNoticia,
         id: nuevoId,  // Asignar el nuevo ID
         date: new Date()
       });
 
-      console.log('Nueva noticia agregada:', this.nuevaNoticia);
-      console.log('Lista actualizada de noticias:', this.noticias);
+      //console.log('Nueva noticia agregada:', this.nuevaNoticia);
+      //console.log('Lista actualizada de noticias:', this.noticias);
 
+      // Reset del formulario
       this.resetFormulario();
     }
   }
 
+  // 5. Método para eliminar noticias
   async eliminarNoticia(id: number) {
-    // Primero obtenemos la noticia para mostrar su título
+
     const noticiaAEliminar = this.noticias.find(n => n.id === id);
     
-    const result = await Swal.fire({
+    const result = await Swal.fire({ // Espera la respuesta del usuario con await
       title: '¿Eliminar noticia?',
       html: `¿Estás seguro de querer eliminar la publicación <strong>"${noticiaAEliminar?.title}"</strong>?`, // Usamos html para formato
       icon: 'warning',
@@ -85,23 +91,26 @@ export class BlogComponent implements OnInit {
         html: `La noticia <strong>"${noticiaAEliminar.title}"</strong> fue eliminada correctamente`, // Usamos html aquí también
         icon: 'success',
         confirmButtonColor: '#2c3e50',
-        timer: 2000
+        timer: 4000
       });
     }
   }
 
+  // 6. Validación de campos
   public validarCampos(): boolean {
     return !!this.nuevaNoticia.title?.trim() && 
            this.esImagenValida(this.nuevaNoticia.image) &&
            !!this.nuevaNoticia.description?.trim();
   }
   
+  // 7. Validación específica de imágenes
   private esImagenValida(url: string): boolean {
     // Valida formato URL y extensión de imagen
     const pattern = /^(https?:\/\/).+\.(jpg|jpeg|png|gif|webp)(\?.*)?$/i;
     return !!url?.trim() && pattern.test(url);
   }
 
+  // 8. Reset del formulario
   private resetFormulario() {
     this.nuevaNoticia = {
       id: 0,
