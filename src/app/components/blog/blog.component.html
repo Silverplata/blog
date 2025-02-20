@@ -1,39 +1,50 @@
 <section class="blog-container">
     <aside class="sidebar">
-      <h2>Nueva Noticia</h2>
+      <h2>Nueva Publicación</h2>
       <form (ngSubmit)="agregarNoticia()" class="formulario">
         <div class="form-group">
           <label>Título:</label>
-          <input type="text" [(ngModel)]="nuevaNoticia.title" name="title" required>
+          <input type="text" [(ngModel)]="nuevaNoticia.title" name="title" placeholder="Ingrese el título" required>
         </div>
   
         <div class="form-group">
           <label>URL Imagen:</label>
-          <input type="url" [(ngModel)]="nuevaNoticia.image" name="image" required>
+          <input type="url" [(ngModel)]="nuevaNoticia.image" name="image" placeholder="https://www.web.es/example.jpg" #imageInput="ngModel" pattern="^(https?://).+\.(jpg|jpeg|png|gif|webp)(\?.*)?$" required>
+          <!-- Mensaje de error -->
+          @if (imageInput.invalid && imageInput.touched) {
+            <small class="error-message">
+              URL inválida. Debe comenzar con http/https y terminar en .jpg, .jpeg, .png, .gif o .webp
+            </small>
+          }
         </div>
   
         <div class="form-group">
           <label>Descripción:</label>
-          <textarea [(ngModel)]="nuevaNoticia.description" name="description" required></textarea>
+          <textarea [(ngModel)]="nuevaNoticia.description" name="description" placeholder="Ingrese la descripción" rows="10" required></textarea>
         </div>
   
-        <button type="submit">Publicar</button>
+        <button type="submit" [disabled]="!validarCampos()">Publicar</button>
       </form>
     </aside>
   
     <div class="content">
       <section class="news-list">
         <h2>Últimas Publicaciones</h2>
-        @for (noticia of noticias; track noticia.title) {
-          <div class="noticia-item">
-            <img [src]="noticia.image" alt="Imagen noticia">
-            <h3>{{ noticia.title }}</h3>
-            <p>{{ noticia.description }}</p>
-            <small>{{ noticia.date }}</small>
-          </div>
+        @if (noticias.length > 0) {
+          @for (noticia of noticias; track noticia.id) {
+            <div class="noticia-item">
+              <img [src]="noticia.image" alt="Imagen noticia">
+              <h3>{{ noticia.title }}</h3>
+              <p>{{ noticia.description }}</p>
+              <br>
+              <i><small>{{ noticia.date }}</small></i>
+              <!-- Botón de eliminar -->
+              <button class="delete-button" (click)="eliminarNoticia(noticia.id)">🗑️ Eliminar</button>
+            </div>
+          }
+        } @else {
+          <p class="no-news">No hay noticias disponibles</p>
         }
       </section>
     </div>
 </section>
-  
-  
