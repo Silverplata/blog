@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { IBlog } from '../../interfaces/iblog.interface';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, NgForm } from '@angular/forms';
 import Swal from 'sweetalert2';
 
 @Component({
@@ -9,9 +9,11 @@ import Swal from 'sweetalert2';
   templateUrl: './blog.component.html',
   styleUrl: './blog.component.css'
 })
-
 export class BlogComponent implements OnInit {
-  // 1. Propiedades del componente
+  // Referencia al formulario
+  @ViewChild('blogForm') blogForm!: NgForm;
+
+  // Propiedades del componente
   noticias: IBlog[] = [];
   nuevaNoticia: IBlog = {
     id: 1,
@@ -21,12 +23,10 @@ export class BlogComponent implements OnInit {
     date: new Date()
   };
 
-  // 2. Ciclo de vida OnInit
   ngOnInit(): void {
-    this.inicializarNoticias(); // Carga noticias iniciales
+    this.inicializarNoticias();
   }
 
-  // 3. Método de inicialización
   private inicializarNoticias(): void {
     this.noticias = [
       {
@@ -46,36 +46,28 @@ export class BlogComponent implements OnInit {
     ];
   }
 
-  // 4. Método para agregar noticias
-  agregarNoticia() {
+  agregarNoticia(form: NgForm) {
     if (this.validarCampos()) {
-      // Generar nuevo ID
       const nuevoId = this.noticias.length > 0 
                      ? Math.max(...this.noticias.map(n => n.id)) + 1 
                      : 1;
-      // Añadir nueva noticia
+      
       this.noticias.push({
         ...this.nuevaNoticia,
-        id: nuevoId,  // Asignar el nuevo ID
+        id: nuevoId,
         date: new Date()
       });
 
-      //console.log('Nueva noticia agregada:', this.nuevaNoticia);
-      //console.log('Lista actualizada de noticias:', this.noticias);
-
-      // Reset del formulario
-      this.resetFormulario();
+      this.resetFormulario(form);
     }
   }
 
-  // 5. Método para eliminar noticias
   async eliminarNoticia(id: number) {
-
     const noticiaAEliminar = this.noticias.find(n => n.id === id);
     
-    const result = await Swal.fire({ // Espera la respuesta del usuario con await
+    const result = await Swal.fire({
       title: '¿Eliminar noticia?',
-      html: `¿Estás seguro de querer eliminar la publicación <strong>"${noticiaAEliminar?.title}"</strong>?`, // Usamos html para formato
+      html: `¿Estás seguro de querer eliminar la publicación <strong>"${noticiaAEliminar?.title}"</strong>?`,
       icon: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#e74c3c',
@@ -88,7 +80,7 @@ export class BlogComponent implements OnInit {
       this.noticias = this.noticias.filter(noticia => noticia.id !== id);
       Swal.fire({
         title: '¡Eliminada!',
-        html: `La noticia <strong>"${noticiaAEliminar.title}"</strong> fue eliminada correctamente`, // Usamos html aquí también
+        html: `La noticia <strong>"${noticiaAEliminar.title}"</strong> fue eliminada correctamente`,
         icon: 'success',
         confirmButtonColor: '#2c3e50',
         timer: 4000
@@ -96,22 +88,19 @@ export class BlogComponent implements OnInit {
     }
   }
 
-  // 6. Validación de campos
   public validarCampos(): boolean {
     return !!this.nuevaNoticia.title?.trim() && 
            this.esImagenValida(this.nuevaNoticia.image) &&
            !!this.nuevaNoticia.description?.trim();
   }
   
-  // 7. Validación específica de imágenes
   private esImagenValida(url: string): boolean {
-    // Valida formato URL y extensión de imagen
     const pattern = /^(https?:\/\/).+\.(jpg|jpeg|png|gif|webp)(\?.*)?$/i;
     return !!url?.trim() && pattern.test(url);
   }
 
-  // 8. Reset del formulario
-  private resetFormulario() {
+  private resetFormulario(form: NgForm) {
+    // Reset del modelo
     this.nuevaNoticia = {
       id: 0,
       title: '',
@@ -119,5 +108,12 @@ export class BlogComponent implements OnInit {
       description: '',
       date: new Date()
     };
+
+    // Reset del estado del formulario
+    if (form) {
+      form.resetForm();
+      form.control.markAsUntouched();
+      form.control.markAsPristine();
+    }
   }
 }

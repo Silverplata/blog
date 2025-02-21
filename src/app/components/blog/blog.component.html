@@ -1,7 +1,7 @@
 <section class="blog-container">
     <aside class="sidebar">
       <h2>Nueva Publicación</h2>
-      <form (ngSubmit)="agregarNoticia()" class="formulario">
+      <form #blogForm="ngForm" (ngSubmit)="agregarNoticia(blogForm)" class="formulario">
         <div class="form-group">
           <label>Título:</label>
           <input type="text" [(ngModel)]="nuevaNoticia.title" name="title" placeholder="Ingrese el título" required>
