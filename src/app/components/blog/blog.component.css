@@ -38,15 +38,14 @@
   border-radius: 4px;
 }
 
-/* Aumentamos especificidad para estados válidos/inválidos */
-.form-group input:invalid,
-.form-group textarea:invalid {
-  border-color: #c70000;
+.form-group input.ng-invalid.ng-touched,
+.form-group textarea.ng-invalid.ng-touched {
+  border-bottom: 3px solid tomato;
 }
 
-.form-group input:valid,
-.form-group textarea:valid {
-  border-color: #02a702;
+.form-group input.ng-valid.ng-touched,
+.form-group textarea.ng-valid.ng-touched {
+  border-bottom: 3px solid green;
 }
 
 .news-list {
